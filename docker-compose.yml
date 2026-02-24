@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: cafeteria-db
+    restart: always
+    environment:
+      POSTGRES_USER: user_cafeteria
+      POSTGRES_PASSWORD: password_cafeteria
+      POSTGRES_DB: db_cafeteria
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: cafeteria-back
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: user_cafeteria
+      DB_PASSWORD: password_cafeteria
+      DB_NAME: db_cafeteria
+      PORT: 3000
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: cafeteria-front
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+
+volumes:
+  db-data:
