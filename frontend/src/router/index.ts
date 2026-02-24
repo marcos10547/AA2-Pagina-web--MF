@@ -26,6 +26,18 @@ const router = createRouter({
             ]
         },
         {
+            path: '/admin',
+            component: () => import('../layouts/AdminLayout.vue'),
+            children: [
+                {
+                    path: '',
+                    name: 'admin-dashboard',
+                    component: () => import('../views/admin/AdminDashboard.vue')
+                }
+                // Aquí irán las rutas de Products y Vendors
+            ]
+        },
+        {
             path: '/login',
             redirect: '/auth/login'
         }
