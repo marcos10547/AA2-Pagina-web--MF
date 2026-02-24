@@ -5,15 +5,30 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            name: 'home',
-            component: () => import('../views/HomeView.vue')
+            component: () => import('../layouts/MainLayout.vue'),
+            children: [
+                {
+                    path: '',
+                    name: 'home',
+                    component: () => import('../views/HomeView.vue')
+                }
+            ]
+        },
+        {
+            path: '/auth',
+            component: () => import('../layouts/AuthLayout.vue'),
+            children: [
+                {
+                    path: 'login',
+                    name: 'login',
+                    component: () => import('../views/LoginView.vue')
+                }
+            ]
         },
         {
             path: '/login',
-            name: 'login',
-            component: () => import('../views/LoginView.vue')
-        },
-        // Añadiremos más rutas (Admin, etc.) más adelante
+            redirect: '/auth/login'
+        }
     ]
 });
 
