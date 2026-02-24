@@ -33,8 +33,13 @@ const router = createRouter({
                     path: '',
                     name: 'admin-dashboard',
                     component: () => import('../views/admin/AdminDashboard.vue')
-                }
-                // Aquí irán las rutas de Products y Vendors
+                },
+                {
+                    path: 'products',
+                    name: 'admin-products',
+                    component: () => import('../views/admin/ProductList.vue')
+                },
+                // Aquí irán las rutas de Vendors
             ]
         },
         {
