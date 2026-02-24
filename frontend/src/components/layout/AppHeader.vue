@@ -27,5 +27,9 @@ const pageTitle = computed(() => {
     <v-btn icon to="/login">
       <v-icon>mdi-account</v-icon>
     </v-btn>
+
+    <v-btn icon to="/admin" color="amber-lighten-4">
+      <v-icon>mdi-cog</v-icon>
+    </v-btn>
   </v-app-bar>
 </template>
