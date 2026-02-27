@@ -19,7 +19,7 @@ const schema = yup.object({
 const { handleSubmit } = useForm({
   validationSchema: schema,
   initialValues: {
-    email: 'admin@cafeteria.com',
+    email: '',
     password: ''
   }
 })

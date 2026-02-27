@@ -2,7 +2,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useProductStore } from '../../stores/product'
 import { useUIStore } from '../../stores/ui'
-import type { ProductDTO } from '../../core/product.dto'
 import ProductItem from '../../components/products/ProductItem.vue'
 import ProductForm from '../../components/products/ProductForm.vue'
 
@@ -13,12 +12,10 @@ onMounted(() => {
   productStore.fetchProducts()
 })
 
-// State reactivo desde el store
 const products = computed(() => productStore.products)
 
-// Estado del diálogo
 const isDialogOpen = ref(false)
-const selectedProduct = ref<any>(undefined)
+const selectedProduct = ref(undefined as any)
 
 function openCreate() {
   selectedProduct.value = undefined
@@ -26,7 +23,7 @@ function openCreate() {
 }
 
 function handleEdit(id: number) {
-  selectedProduct.value = products.value.find(p => p.id === id)
+  selectedProduct.value = products.value.find((p: any) => p.id === id)
   isDialogOpen.value = true
 }
 
@@ -35,7 +32,7 @@ function handleDelete(id: number) {
   uiStore.showNotify('Producto eliminado correctamente', 'error')
 }
 
-function onSave(formData: Omit<ProductDTO, 'id'>) {
+function onSave(formData: any) {
   if (selectedProduct.value) {
     productStore.updateProduct(selectedProduct.value.id, formData)
     uiStore.showNotify('Producto actualizado con éxito')
