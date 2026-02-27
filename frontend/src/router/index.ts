@@ -6,14 +6,11 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            redirect: '/auth/login'
-        },
-        // Mantenemos la home por exigencia de la práctica (página pública),
-        // pero la movemos a una ruta secundaria que no estorbe al flujo.
-        {
-            path: '/welcome',
-            name: 'home',
-            component: () => import('../views/HomeView.vue')
+            redirect: () => {
+                // Si ya está autenticado, ir al admin. Si no, al login.
+                const token = localStorage.getItem('token')
+                return token ? '/admin' : '/auth/login'
+            }
         },
         {
             path: '/auth',
@@ -60,14 +57,22 @@ const router = createRouter({
     ]
 })
 
-router.beforeEach((to, _, next) => {
+router.beforeEach((to, _from, next) => {
     const authStore = useAuthStore()
 
+    // Si ya está autenticado y va al login, redirigir al admin
+    if (authStore.isAuthenticated && (to.name === 'login' || to.name === 'register')) {
+        next('/admin')
+        return
+    }
+
+    // Si la ruta requiere auth y no está autenticado, al login
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
         next('/auth/login')
-    } else {
-        next()
+        return
     }
+
+    next()
 })
 
 export default router
