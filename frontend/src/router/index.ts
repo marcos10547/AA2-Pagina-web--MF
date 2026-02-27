@@ -8,16 +8,12 @@ const router = createRouter({
             path: '/',
             redirect: '/auth/login'
         },
+        // Mantenemos la home por exigencia de la práctica (página pública),
+        // pero la movemos a una ruta secundaria que no estorbe al flujo.
         {
-            path: '/home',
-            component: () => import('../layouts/MainLayout.vue'),
-            children: [
-                {
-                    path: '',
-                    name: 'home',
-                    component: () => import('../views/HomeView.vue')
-                }
-            ]
+            path: '/welcome',
+            name: 'home',
+            component: () => import('../views/HomeView.vue')
         },
         {
             path: '/auth',

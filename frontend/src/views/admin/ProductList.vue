@@ -1,3 +1,4 @@
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useProductStore } from '../../stores/product'
 import { useUIStore } from '../../stores/ui'
@@ -17,7 +18,7 @@ const products = computed(() => productStore.products)
 
 // Estado del diálogo
 const isDialogOpen = ref(false)
-const selectedProduct = ref<ProductDTO | undefined>(undefined)
+const selectedProduct = ref<any>(undefined)
 
 function openCreate() {
   selectedProduct.value = undefined
