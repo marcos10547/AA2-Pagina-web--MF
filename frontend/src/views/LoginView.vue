@@ -89,9 +89,6 @@ const onSubmit = handleSubmit(async (values) => {
             <v-btn variant="text" color="secondary" to="/auth/register">
               {{ $t('auth.noAccount') }}
             </v-btn>
-            <v-btn variant="text" size="small" to="/home" class="mt-2">
-              {{ $t('auth.backHome') }}
-            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

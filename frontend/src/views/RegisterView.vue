@@ -39,8 +39,10 @@ const onSubmit = handleSubmit(async (values) => {
   loading.value = true
   try {
     await authStore.register(values.name, values.email, values.password)
-    uiStore.showNotify('¡Cuenta creada correctamente! Ya puedes iniciar sesión.')
-    router.push('/auth/login')
+    // Auto-login después del registro
+    await authStore.login(values.email, values.password)
+    uiStore.showNotify('¡Cuenta creada! Bienvenido.')
+    router.push('/admin')
   } catch (err: any) {
     uiStore.showNotify(err.message || 'Error al registrarse', 'error')
   } finally {
@@ -115,9 +117,6 @@ const onSubmit = handleSubmit(async (values) => {
           <v-card-actions class="justify-center pb-4 flex-column">
             <v-btn variant="text" color="primary" to="/auth/login">
               {{ $t('auth.alreadyAccount') }}
-            </v-btn>
-            <v-btn variant="text" size="small" to="/home" class="mt-2">
-              {{ $t('auth.backHome') }}
             </v-btn>
           </v-card-actions>
         </v-card>

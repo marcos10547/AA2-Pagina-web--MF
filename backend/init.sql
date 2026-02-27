@@ -44,5 +44,5 @@ ON CONFLICT DO NOTHING;
 
 -- Usuario Admin por defecto (Password: admin123)
 INSERT INTO users (name, email, password, role)
-VALUES ('Administrador', 'admin@cafeteria.com', '$2a$10$Xm27IubV8bVjB2x0A/7SreY7b9P9F7J.N.L6Y3vPzX8f/9xO4u6ay', 'admin')
+VALUES ('Administrador', 'admin@cafeteria.com', '$2b$10$UJvNbMBrcaTumvwiJw6Xp.LXXI3I2yRlqbKNqEdI2XHWtREYppEmi', 'admin')
 ON CONFLICT (email) DO NOTHING;
