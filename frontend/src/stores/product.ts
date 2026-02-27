@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import type { ProductDTO } from '../core/product.dto'
 
-const API_URL = 'http://localhost:3000/api'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
 export const useProductStore = defineStore('product', {
     state: () => ({
