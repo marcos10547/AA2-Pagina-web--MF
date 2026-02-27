@@ -2,8 +2,10 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useTheme } from 'vuetify'
 
 const route = useRoute()
+const theme = useTheme()
 const { locale, t } = useI18n()
 
 const pageTitle = computed(() => {
@@ -18,6 +20,10 @@ const pageTitle = computed(() => {
 const toggleLocale = () => {
   locale.value = locale.value === 'es' ? 'en' : 'es'
 }
+
+const toggleTheme = () => {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
 </script>
 
 <template>
@@ -31,6 +37,11 @@ const toggleLocale = () => {
     <v-btn variant="text" @click="toggleLocale" class="mr-2">
       <v-icon start>mdi-translate</v-icon>
       {{ locale.toUpperCase() }}
+    </v-btn>
+
+    <!-- Cambio de Tema -->
+    <v-btn icon @click="toggleTheme" class="mr-2">
+      <v-icon>{{ theme.global.current.value.dark ? 'mdi-white-balance-sunny' : 'mdi-moon-waning-crescent' }}</v-icon>
     </v-btn>
 
     <v-btn icon to="/">
