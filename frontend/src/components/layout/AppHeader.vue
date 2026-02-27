@@ -44,7 +44,7 @@ const toggleTheme = () => {
       <v-icon>{{ theme.global.current.value.dark ? 'mdi-white-balance-sunny' : 'mdi-moon-waning-crescent' }}</v-icon>
     </v-btn>
 
-    <v-btn icon to="/">
+    <v-btn icon to="/home">
       <v-icon>mdi-home</v-icon>
     </v-btn>
     

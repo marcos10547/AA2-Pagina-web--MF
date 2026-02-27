@@ -11,7 +11,7 @@ const adminItems = [
   { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/admin' },
   { title: 'Productos', icon: 'mdi-package-variant', to: '/admin/products' },
   { title: 'Proveedores', icon: 'mdi-truck', to: '/admin/vendors' },
-  { title: 'Volver a la Web', icon: 'mdi-arrow-left', to: '/' },
+  { title: 'Volver a la Web', icon: 'mdi-arrow-left', to: '/home' },
 ]
 
 function handleLogout() {

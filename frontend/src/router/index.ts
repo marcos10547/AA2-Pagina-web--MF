@@ -6,6 +6,10 @@ const router = createRouter({
     routes: [
         {
             path: '/',
+            redirect: '/auth/login'
+        },
+        {
+            path: '/home',
             component: () => import('../layouts/MainLayout.vue'),
             children: [
                 {
