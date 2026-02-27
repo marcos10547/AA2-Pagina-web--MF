@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useAuthStore } from '../stores/auth'
+import { useRouter } from 'vue-router'
 
 const drawer = ref(true)
+const authStore = useAuthStore()
+const router = useRouter()
 
 const adminItems = [
   { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/admin' },
@@ -9,6 +13,11 @@ const adminItems = [
   { title: 'Proveedores', icon: 'mdi-truck', to: '/admin/vendors' },
   { title: 'Volver a la Web', icon: 'mdi-arrow-left', to: '/' },
 ]
+
+function handleLogout() {
+  authStore.logout()
+  router.push('/')
+}
 </script>
 
 <template>
@@ -34,6 +43,17 @@ const adminItems = [
           :to="item.to"
         ></v-list-item>
       </v-list>
+      <v-divider></v-divider>
+
+      <v-list density="compact" nav>
+        <v-list-item 
+          prepend-icon="mdi-logout" 
+          title="Cerrar Sesión" 
+          value="logout" 
+          color="error"
+          @click="handleLogout"
+        ></v-list-item>
+      </v-list>
     </v-navigation-drawer>
 
     <!-- Header de Administración -->
@@ -41,7 +61,7 @@ const adminItems = [
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title>Cafetería - Panel Control</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <v-btn icon @click="handleLogout" color="error">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>

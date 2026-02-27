@@ -1,3 +1,12 @@
+-- Tabla de Usuarios
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'admin'
+);
+
 -- Tabla de Proveedores
 CREATE TABLE IF NOT EXISTS vendors (
     id SERIAL PRIMARY KEY,
@@ -32,3 +41,8 @@ VALUES
 ('Croissant Recreo', 'Mantequilla pura y masa hojaldrada', 2.20, 30, 'Bollería'),
 ('Tarta de Queso', 'Receta casera estilo New York', 4.50, 12, 'Postres')
 ON CONFLICT DO NOTHING;
+
+-- Usuario Admin por defecto (Password: admin123)
+INSERT INTO users (name, email, password, role)
+VALUES ('Administrador', 'admin@cafeteria.com', '$2a$10$Xm27IubV8bVjB2x0A/7SreY7b9P9F7J.N.L6Y3vPzX8f/9xO4u6ay', 'admin')
+ON CONFLICT (email) DO NOTHING;

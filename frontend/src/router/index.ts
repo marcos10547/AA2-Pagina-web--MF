@@ -1,4 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,7 @@ const router = createRouter({
         {
             path: '/admin',
             component: () => import('../layouts/AdminLayout.vue'),
+            meta: { requiresAuth: true },
             children: [
                 {
                     path: '',
@@ -51,6 +53,16 @@ const router = createRouter({
             redirect: '/auth/login'
         }
     ]
-});
+})
 
-export default router;
+router.beforeEach((to, _, next) => {
+    const authStore = useAuthStore()
+
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+        next('/auth/login')
+    } else {
+        next()
+    }
+})
+
+export default router

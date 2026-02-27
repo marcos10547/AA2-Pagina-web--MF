@@ -4,12 +4,6 @@ Este proyecto es una aplicación web completa (MERN stack adaptado a Vue/Postgre
 
 ## 🚀 Requisitos previos
 - Docker Desktop instalado.
-- Git (opcional).
-
-## 🛠 Entorno y Tecnologías
-- **Frontend**: Vue 3 (Composition API), TypeScript, Vuetify 3, Pinia, Vue Router, VeeValidate + Yup.
-- **Backend**: Node.js, Express, PostgreSQL.
-- **Despliegue**: Docker & Docker Compose.
 
 ## 📦 Lanzamiento del Proyecto
 Para arrancar toda la aplicación (Base de Datos + API + Frontend) de forma automática, simplemente ejecuta desde la raíz del proyecto:
