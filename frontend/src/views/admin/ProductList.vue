@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useProductStore } from '../../stores/product'
 import { useUIStore } from '../../stores/ui'
 import type { ProductDTO } from '../../core/product.dto'
@@ -7,6 +7,10 @@ import ProductForm from '../../components/products/ProductForm.vue'
 
 const productStore = useProductStore()
 const uiStore = useUIStore()
+
+onMounted(() => {
+  productStore.fetchProducts()
+})
 
 // State reactivo desde el store
 const products = computed(() => productStore.products)

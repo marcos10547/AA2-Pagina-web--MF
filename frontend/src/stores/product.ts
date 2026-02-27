@@ -1,32 +1,62 @@
 import { defineStore } from 'pinia'
 import type { ProductDTO } from '../core/product.dto'
 
+const API_URL = 'http://localhost:3000/api'
+
 export const useProductStore = defineStore('product', {
     state: () => ({
-        products: [
-            { id: 1, name: 'Café Espresso', description: 'Café intenso de tueste natural', price: 1.5, stock: 100, category: 'Cafés' },
-            { id: 2, name: 'Croissant Recreo', description: 'Mantequilla pura y masa hojaldrada', price: 2.2, stock: 30, category: 'Bollería' },
-            { id: 3, name: 'Tarta de Queso', description: 'Receta casera estilo New York', price: 4.5, stock: 12, category: 'Postres' }
-        ] as ProductDTO[],
+        products: [] as ProductDTO[],
         loading: false,
         error: null as string | null,
     }),
     actions: {
-        addProduct(product: Omit<ProductDTO, 'id'>) {
-            const newId = this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 1
-            this.products.push({ ...product, id: newId })
-        },
-        updateProduct(id: number, updatedData: Omit<ProductDTO, 'id'>) {
-            const index = this.products.findIndex(p => p.id === id)
-            if (index !== -1) {
-                this.products[index] = { ...updatedData, id }
+        async fetchProducts() {
+            this.loading = true
+            try {
+                const response = await fetch(`${API_URL}/products`)
+                this.products = await response.json()
+            } catch (err) {
+                this.error = 'Error al cargar productos'
+            } finally {
+                this.loading = false
             }
         },
-        deleteProduct(id: number) {
-            this.products = this.products.filter(p => p.id !== id)
+        async addProduct(product: Omit<ProductDTO, 'id'>) {
+            try {
+                const response = await fetch(`${API_URL}/products`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(product)
+                })
+                const newProduct = await response.json()
+                this.products.push(newProduct)
+            } catch (err) {
+                throw new Error('No se pudo guardar el producto')
+            }
         },
-        setLoading(status: boolean) {
-            this.loading = status
+        async updateProduct(id: number, updatedData: Omit<ProductDTO, 'id'>) {
+            try {
+                const response = await fetch(`${API_URL}/products/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                })
+                const updated = await response.json()
+                const index = this.products.findIndex(p => p.id === id)
+                if (index !== -1) {
+                    this.products[index] = updated
+                }
+            } catch (err) {
+                throw new Error('No se pudo actualizar el producto')
+            }
+        },
+        async deleteProduct(id: number) {
+            try {
+                await fetch(`${API_URL}/products/${id}`, { method: 'DELETE' })
+                this.products = this.products.filter(p => p.id !== id)
+            } catch (err) {
+                throw new Error('No se pudo eliminar el producto')
+            }
         }
     }
 })

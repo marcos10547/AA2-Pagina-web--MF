@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useVendorStore } from '../../stores/vendor'
 import { useUIStore } from '../../stores/ui'
 import type { VendorDTO } from '../../core/vendor.dto'
@@ -8,6 +8,10 @@ import VendorForm from '../../components/vendors/VendorForm.vue'
 
 const vendorStore = useVendorStore()
 const uiStore = useUIStore()
+
+onMounted(() => {
+  vendorStore.fetchVendors()
+})
 
 const vendors = computed(() => vendorStore.vendors)
 
