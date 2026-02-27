@@ -5,17 +5,18 @@
         <v-card class="mt-5" elevation="2">
           <v-card-title class="text-h4 primary--text">
             <v-icon icon="mdi-coffee" class="mr-2"></v-icon>
-            Gestión de Inventario - Cafetería
+            {{ $t('home.welcome') }}
           </v-card-title>
           
           <v-card-text>
-            <p class="text-body-1">Bienvenido a la aplicación de gestión. Esta es la página principal pública.</p>
+            <p class="text-body-1">{{ $t('home.subtitle') }}</p>
+            <p class="text-caption mt-2">{{ $t('home.hours') }}</p>
           </v-card-text>
 
           <v-card-actions>
             <v-btn color="primary" variant="elevated" to="/login">
               <v-icon icon="mdi-login" class="mr-1"></v-icon>
-              Ir al Login
+              {{ $t('home.explore') }}
             </v-btn>
           </v-card-actions>
         </v-card>

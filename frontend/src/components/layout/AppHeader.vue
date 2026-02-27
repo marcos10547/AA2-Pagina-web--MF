@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
+const { locale, t } = useI18n()
 
 const pageTitle = computed(() => {
   switch (route.name) {
-    case 'home': return 'Inicio'
-    case 'login': return 'Acceso'
+    case 'home': return t('nav.home')
+    case 'login': return t('nav.login')
+    case 'register': return t('nav.register')
     default: return 'Cafetería'
   }
 })
+
+const toggleLocale = () => {
+  locale.value = locale.value === 'es' ? 'en' : 'es'
+}
 </script>
 
 <template>
@@ -19,6 +26,12 @@ const pageTitle = computed(() => {
     <v-app-bar-title>{{ pageTitle }}</v-app-bar-title>
     
     <v-spacer></v-spacer>
+
+    <!-- Selector de Idioma -->
+    <v-btn variant="text" @click="toggleLocale" class="mr-2">
+      <v-icon start>mdi-translate</v-icon>
+      {{ locale.toUpperCase() }}
+    </v-btn>
 
     <v-btn icon to="/">
       <v-icon>mdi-home</v-icon>

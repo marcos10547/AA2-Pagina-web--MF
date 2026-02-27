@@ -47,14 +47,14 @@ const onSubmit = handleSubmit(async (values) => {
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-12 rounded-lg">
           <v-toolbar color="primary" dark flat>
-            <v-toolbar-title class="text-center w-100">Acceso Cafetería</v-toolbar-title>
+            <v-toolbar-title class="text-center w-100">{{ $t('auth.title') }}</v-toolbar-title>
           </v-toolbar>
           
           <v-card-text class="pt-6">
             <v-form @submit.prevent="onSubmit">
               <v-text-field
                 v-model="email"
-                label="Correo Electrónico"
+                :label="$t('auth.email')"
                 prepend-icon="mdi-account"
                 type="email"
                 variant="outlined"
@@ -64,7 +64,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <v-text-field
                 v-model="password"
-                label="Contraseña"
+                :label="$t('auth.password')"
                 prepend-icon="mdi-lock"
                 type="password"
                 variant="outlined"
@@ -80,17 +80,17 @@ const onSubmit = handleSubmit(async (values) => {
                 :loading="loading"
                 variant="elevated"
               >
-                Entrar
+                {{ $t('auth.submit') }}
               </v-btn>
             </v-form>
           </v-card-text>
           
           <v-card-actions class="justify-center pb-4 flex-column">
             <v-btn variant="text" color="secondary" to="/auth/register">
-              ¿No tienes cuenta? Regístrate
+              {{ $t('auth.noAccount') }}
             </v-btn>
             <v-btn variant="text" size="small" to="/" class="mt-2">
-              Volver al inicio
+              {{ $t('auth.backHome') }}
             </v-btn>
           </v-card-actions>
         </v-card>

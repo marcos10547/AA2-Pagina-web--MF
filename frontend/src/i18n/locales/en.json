@@ -1,0 +1,28 @@
+{
+    "nav": {
+        "home": "Home",
+        "login": "Login",
+        "admin": "Admin",
+        "logout": "Logout",
+        "register": "Register"
+    },
+    "home": {
+        "welcome": "Welcome to our Coffee Shop!",
+        "subtitle": "The best aroma in town in every cup",
+        "explore": "Explore Products",
+        "hours": "Monday to Sunday: 08:00 AM - 08:00 PM"
+    },
+    "auth": {
+        "title": "Coffee Shop Login",
+        "email": "Email Address",
+        "password": "Password",
+        "submit": "Login",
+        "noAccount": "Don't have an account? Register",
+        "backHome": "Back to Home",
+        "registerTitle": "Create Account",
+        "registerSubmit": "Register",
+        "alreadyAccount": "Already have an account? Log in",
+        "name": "Full Name",
+        "confirmPassword": "Confirm Password"
+    }
+}

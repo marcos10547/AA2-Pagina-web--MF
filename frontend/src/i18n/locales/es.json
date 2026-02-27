@@ -1,0 +1,28 @@
+{
+    "nav": {
+        "home": "Inicio",
+        "login": "Acceso",
+        "admin": "Admin",
+        "logout": "Cerrar Sesión",
+        "register": "Registro"
+    },
+    "home": {
+        "welcome": "¡Bienvenidos a nuestra Cafetería!",
+        "subtitle": "El mejor aroma de la ciudad en cada taza",
+        "explore": "Explorar Productos",
+        "hours": "Lunes a Domingo: 08:00 - 20:00"
+    },
+    "auth": {
+        "title": "Acceso Cafetería",
+        "email": "Correo Electrónico",
+        "password": "Contraseña",
+        "submit": "Entrar",
+        "noAccount": "¿No tienes cuenta? Regístrate",
+        "backHome": "Volver al inicio",
+        "registerTitle": "Crear Cuenta",
+        "registerSubmit": "Registrarme",
+        "alreadyAccount": "¿Ya tienes cuenta? Inicia sesión",
+        "name": "Nombre Completo",
+        "confirmPassword": "Confirmar Contraseña"
+    }
+}

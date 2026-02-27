@@ -55,14 +55,14 @@ const onSubmit = handleSubmit(async (values) => {
       <v-col cols="12" sm="8" md="5">
         <v-card class="elevation-12 rounded-lg">
           <v-toolbar color="secondary" dark flat>
-            <v-toolbar-title class="text-center w-100">Crear Cuenta</v-toolbar-title>
+            <v-toolbar-title class="text-center w-100">{{ $t('auth.registerTitle') }}</v-toolbar-title>
           </v-toolbar>
           
           <v-card-text class="pt-6">
             <v-form @submit.prevent="onSubmit">
               <v-text-field
                 v-model="name"
-                label="Nombre Completo"
+                :label="$t('auth.name')"
                 prepend-icon="mdi-account-circle"
                 variant="outlined"
                 :error-messages="nameError"
@@ -71,7 +71,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <v-text-field
                 v-model="email"
-                label="Correo Electrónico"
+                :label="$t('auth.email')"
                 prepend-icon="mdi-email"
                 type="email"
                 variant="outlined"
@@ -81,7 +81,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <v-text-field
                 v-model="password"
-                label="Contraseña"
+                :label="$t('auth.password')"
                 prepend-icon="mdi-lock"
                 type="password"
                 variant="outlined"
@@ -91,7 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <v-text-field
                 v-model="confirmPassword"
-                label="Confirmar Contraseña"
+                :label="$t('auth.confirmPassword')"
                 prepend-icon="mdi-lock-check"
                 type="password"
                 variant="outlined"
@@ -107,17 +107,17 @@ const onSubmit = handleSubmit(async (values) => {
                 :loading="loading"
                 variant="elevated"
               >
-                Registrarme
+                {{ $t('auth.registerSubmit') }}
               </v-btn>
             </v-form>
           </v-card-text>
           
           <v-card-actions class="justify-center pb-4 flex-column">
             <v-btn variant="text" color="primary" to="/auth/login">
-              ¿Ya tienes cuenta? Inicia sesión
+              {{ $t('auth.alreadyAccount') }}
             </v-btn>
             <v-btn variant="text" size="small" to="/" class="mt-2">
-              Volver al inicio
+              {{ $t('auth.backHome') }}
             </v-btn>
           </v-card-actions>
         </v-card>
