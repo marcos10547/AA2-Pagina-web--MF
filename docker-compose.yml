@@ -13,6 +13,7 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   backend:
     build: ./backend
@@ -24,6 +25,7 @@ services:
       DB_USER: user_cafeteria
       DB_PASSWORD: password_cafeteria
       DB_NAME: db_cafeteria
+      JWT_SECRET: super_secret_jwt_key_123
       PORT: 3000
     depends_on:
       - db
