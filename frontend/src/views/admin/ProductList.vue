@@ -65,7 +65,6 @@ function onSave(formData: any) {
       />
     </v-col>
 
-    <!-- Diálogo del Formulario -->
     <v-dialog v-model="isDialogOpen" max-width="600px">
       <ProductForm 
         :initial-data="selectedProduct" 

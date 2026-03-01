@@ -3,11 +3,13 @@ import { ref } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useTheme } from 'vuetify'
 
 const drawer = ref(true)
 const authStore = useAuthStore()
 const router = useRouter()
 const { locale } = useI18n()
+const theme = useTheme()
 
 const languages = [
   { title: 'Español', value: 'es' },
@@ -16,6 +18,10 @@ const languages = [
 
 function changeLanguage(lang: string) {
   locale.value = lang
+}
+
+function toggleTheme() {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
 
 const adminItems = [
@@ -90,13 +96,18 @@ function handleLogout() {
         </v-list>
       </v-menu>
 
+      <!-- Toggle Tema Oscuro/Claro -->
+      <v-btn icon @click="toggleTheme">
+        <v-icon>{{ theme.global.current.value.dark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
+      </v-btn>
+
       <v-btn icon @click="handleLogout" color="error">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>
 
     <!-- Contenido Principal -->
-    <v-main class="bg-grey-lighten-3">
+    <v-main>
       <v-container fluid>
         <router-view />
       </v-container>

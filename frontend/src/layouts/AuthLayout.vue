@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { useTheme } from 'vuetify'
 
 const { locale } = useI18n()
+const theme = useTheme()
 
 const languages = [
   { title: 'Español', value: 'es' },
@@ -11,12 +13,16 @@ const languages = [
 function changeLanguage(lang: string) {
   locale.value = lang
 }
+
+function toggleTheme() {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
 </script>
 
 <template>
   <v-app>
-    <!-- Botón de idioma flotante en la esquina superior derecha -->
-    <div style="position: fixed; top: 16px; right: 16px; z-index: 999;">
+    <!-- Botones flotantes: Idioma + Tema -->
+    <div style="position: fixed; top: 16px; right: 16px; z-index: 999; display: flex; gap: 8px;">
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props" icon variant="elevated" color="primary" size="small">
@@ -33,9 +39,13 @@ function changeLanguage(lang: string) {
           ></v-list-item>
         </v-list>
       </v-menu>
+
+      <v-btn icon variant="elevated" color="primary" size="small" @click="toggleTheme">
+        <v-icon>{{ theme.global.current.value.dark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
+      </v-btn>
     </div>
 
-    <v-main class="bg-grey-lighten-4">
+    <v-main>
       <v-container fill-height fluid>
         <router-view />
       </v-container>
