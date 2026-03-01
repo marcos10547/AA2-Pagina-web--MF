@@ -46,14 +46,14 @@ const onSubmit = handleSubmit((values) => {
 <template>
   <v-card>
     <v-card-title class="bg-primary text-white">
-      {{ initialData ? 'Editar Producto' : 'Nuevo Producto' }}
+      {{ initialData ? $t('admin.editProduct') : $t('admin.newProductTitle') }}
     </v-card-title>
     
     <v-card-text class="pt-4">
       <v-form @submit.prevent="onSubmit">
         <v-text-field
           v-model="name"
-          label="Nombre del Producto"
+          :label="$t('admin.productName')"
           :error-messages="nameError"
           variant="outlined"
         ></v-text-field>
@@ -61,7 +61,7 @@ const onSubmit = handleSubmit((values) => {
         <v-select
           v-model="category"
           :items="['Cafés', 'Bollería', 'Postres', 'Bebidas']"
-          label="Categoría"
+          :label="$t('admin.category')"
           :error-messages="categoryError"
           variant="outlined"
         ></v-select>
@@ -70,7 +70,7 @@ const onSubmit = handleSubmit((values) => {
           <v-col cols="6">
             <v-text-field
               v-model.number="price"
-              label="Precio (€)"
+              :label="$t('admin.price')"
               type="number"
               :error-messages="priceError"
               variant="outlined"
@@ -79,7 +79,7 @@ const onSubmit = handleSubmit((values) => {
           <v-col cols="6">
             <v-text-field
               v-model.number="stock"
-              label="Stock inicial"
+              :label="$t('admin.stock')"
               type="number"
               :error-messages="stockError"
               variant="outlined"
@@ -89,7 +89,7 @@ const onSubmit = handleSubmit((values) => {
 
         <v-textarea
           v-model="description"
-          label="Descripción"
+          :label="$t('admin.description')"
           :error-messages="descriptionError"
           variant="outlined"
           rows="3"
@@ -97,8 +97,8 @@ const onSubmit = handleSubmit((values) => {
 
         <v-card-actions class="px-0">
           <v-spacer></v-spacer>
-          <v-btn color="grey-darken-1" variant="text" @click="emit('cancel')">Cancelar</v-btn>
-          <v-btn color="primary" type="submit" variant="elevated">Guardar</v-btn>
+          <v-btn color="grey-darken-1" variant="text" @click="emit('cancel')">{{ $t('admin.cancel') }}</v-btn>
+          <v-btn color="primary" type="submit" variant="elevated">{{ $t('admin.save') }}</v-btn>
         </v-card-actions>
       </v-form>
     </v-card-text>

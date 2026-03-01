@@ -45,27 +45,27 @@ const onSubmit = handleSubmit((values) => {
 <template>
   <v-card>
     <v-card-title class="bg-secondary text-white">
-      {{ initialData ? 'Editar Proveedor' : 'Nuevo Proveedor' }}
+      {{ initialData ? $t('admin.editVendor') : $t('admin.newVendorTitle') }}
     </v-card-title>
     
     <v-card-text class="pt-4">
       <v-form @submit.prevent="onSubmit">
-        <v-text-field v-model="name" label="Empresa" :error-messages="nameError" variant="outlined"></v-text-field>
-        <v-text-field v-model="contactName" label="Persona de Contacto" :error-messages="contactNameError" variant="outlined"></v-text-field>
+        <v-text-field v-model="name" :label="$t('admin.company')" :error-messages="nameError" variant="outlined"></v-text-field>
+        <v-text-field v-model="contactName" :label="$t('admin.contactPerson')" :error-messages="contactNameError" variant="outlined"></v-text-field>
         <v-text-field v-model="email" label="Email" :error-messages="emailError" variant="outlined"></v-text-field>
-        <v-text-field v-model="phone" label="Teléfono" :error-messages="phoneError" variant="outlined"></v-text-field>
+        <v-text-field v-model="phone" :label="$t('admin.phone')" :error-messages="phoneError" variant="outlined"></v-text-field>
         <v-select
           v-model="category"
           :items="['Lácteos', 'Panadería', 'Café Crudo', 'Limpieza', 'Otros']"
-          label="Categoría"
+          :label="$t('admin.category')"
           :error-messages="categoryError"
           variant="outlined"
         ></v-select>
 
         <v-card-actions class="px-0">
           <v-spacer></v-spacer>
-          <v-btn color="grey" variant="text" @click="emit('cancel')">Cancelar</v-btn>
-          <v-btn color="secondary" type="submit" variant="elevated">Guardar</v-btn>
+          <v-btn color="grey" variant="text" @click="emit('cancel')">{{ $t('admin.cancel') }}</v-btn>
+          <v-btn color="secondary" type="submit" variant="elevated">{{ $t('admin.save') }}</v-btn>
         </v-card-actions>
       </v-form>
     </v-card-text>

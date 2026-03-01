@@ -2,7 +2,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useVendorStore } from '../../stores/vendor'
 import { useUIStore } from '../../stores/ui'
-import type { VendorDTO } from '../../core/vendor.dto'
 import VendorItem from '../../components/vendors/VendorItem.vue'
 import VendorForm from '../../components/vendors/VendorForm.vue'
 
@@ -16,7 +15,7 @@ onMounted(() => {
 const vendors = computed(() => vendorStore.vendors)
 
 const isDialogOpen = ref(false)
-const selectedVendor = ref<VendorDTO | undefined>(undefined)
+const selectedVendor = ref(undefined as any)
 
 function openCreate() {
   selectedVendor.value = undefined
@@ -24,7 +23,7 @@ function openCreate() {
 }
 
 function handleEdit(id: number) {
-  selectedVendor.value = vendors.value.find(v => v.id === id)
+  selectedVendor.value = vendors.value.find((v: any) => v.id === id)
   isDialogOpen.value = true
 }
 
@@ -33,7 +32,7 @@ function handleDelete(id: number) {
   uiStore.showNotify('Proveedor eliminado', 'error')
 }
 
-function onSave(formData: Omit<VendorDTO, 'id'>) {
+function onSave(formData: any) {
   if (selectedVendor.value) {
     vendorStore.updateVendor(selectedVendor.value.id, formData)
     uiStore.showNotify('Proveedor actualizado')
@@ -48,8 +47,8 @@ function onSave(formData: Omit<VendorDTO, 'id'>) {
 <template>
   <v-row>
     <v-col cols="12" class="d-flex justify-space-between align-center">
-      <h1 class="text-h4">Gestión de Proveedores</h1>
-      <v-btn color="secondary" prepend-icon="mdi-plus" @click="openCreate">Nuevo Proveedor</v-btn>
+      <h1 class="text-h4">{{ $t('admin.vendorManagement') }}</h1>
+      <v-btn color="secondary" prepend-icon="mdi-plus" @click="openCreate">{{ $t('admin.newVendor') }}</v-btn>
     </v-col>
 
     <v-col cols="12">
