@@ -47,8 +47,8 @@ function onSave(formData: any) {
 <template>
   <v-row>
     <v-col cols="12" class="d-flex justify-space-between align-center">
-      <h1 class="text-h4">Gestión de Proveedores</h1>
-      <v-btn color="secondary" prepend-icon="mdi-plus" @click="openCreate">Nuevo Proveedor</v-btn>
+      <h1 class="text-h4">{{ $t('admin.vendorManagement') }}</h1>
+      <v-btn color="secondary" prepend-icon="mdi-plus" @click="openCreate">{{ $t('admin.newVendor') }}</v-btn>
     </v-col>
 
     <v-col cols="12">
