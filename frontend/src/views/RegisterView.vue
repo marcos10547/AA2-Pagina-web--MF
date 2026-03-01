@@ -22,24 +22,18 @@ const schema = yup.object({
 
 const { handleSubmit } = useForm({
   validationSchema: schema,
-  initialValues: {
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  }
+  initialValues: { name: '', email: '', password: '', confirmPassword: '' }
 })
 
-const { value: name, errorMessage: nameError } = useField<string>('name')
-const { value: email, errorMessage: emailError } = useField<string>('email')
-const { value: password, errorMessage: passwordError } = useField<string>('password')
-const { value: confirmPassword, errorMessage: confirmPasswordError } = useField<string>('confirmPassword')
+const { value: name, errorMessage: nameError } = useField('name')
+const { value: email, errorMessage: emailError } = useField('email')
+const { value: password, errorMessage: passwordError } = useField('password')
+const { value: confirmPassword, errorMessage: confirmPasswordError } = useField('confirmPassword')
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true
   try {
     await authStore.register(values.name, values.email, values.password)
-    // Auto-login después del registro
     await authStore.login(values.email, values.password)
     uiStore.showNotify('¡Cuenta creada! Bienvenido.')
     router.push('/admin')
@@ -52,81 +46,93 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <v-container fluid class="fill-height bg-grey-lighten-4">
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="5">
-        <v-card class="elevation-12 rounded-lg">
-          <v-toolbar color="secondary" dark flat>
-            <v-toolbar-title class="text-center w-100">{{ $t('auth.registerTitle') }}</v-toolbar-title>
-          </v-toolbar>
-          
-          <v-card-text class="pt-6">
-            <v-form @submit.prevent="onSubmit">
-              <v-text-field
-                v-model="name"
-                :label="$t('auth.name')"
-                prepend-icon="mdi-account-circle"
-                variant="outlined"
-                :error-messages="nameError"
-                class="mb-2"
-              ></v-text-field>
+  <div class="register-wrapper">
+    <div class="register-brand">
+      <div class="brand-content">
+        <v-icon size="80" color="white" class="mb-4">mdi-coffee</v-icon>
+        <h1 class="text-h3 font-weight-bold text-white mb-2">Cafetería</h1>
+        <p class="text-subtitle-1 text-white" style="opacity: 0.85">
+          {{ $t('home.subtitle') }}
+        </p>
+      </div>
+    </div>
 
-              <v-text-field
-                v-model="email"
-                :label="$t('auth.email')"
-                prepend-icon="mdi-email"
-                type="email"
-                variant="outlined"
-                :error-messages="emailError"
-                class="mb-2"
-              ></v-text-field>
+    <div class="register-form-panel">
+      <v-card class="register-card" elevation="0" rounded="xl">
+        <v-card-text class="pa-8">
+          <div class="text-center mb-5">
+            <v-avatar color="secondary" size="56" class="mb-3">
+              <v-icon size="30" color="white">mdi-account-plus-outline</v-icon>
+            </v-avatar>
+            <h2 class="text-h5 font-weight-bold">{{ $t('auth.registerTitle') }}</h2>
+          </div>
 
-              <v-text-field
-                v-model="password"
-                :label="$t('auth.password')"
-                prepend-icon="mdi-lock"
-                type="password"
-                variant="outlined"
-                :error-messages="passwordError"
-                class="mb-2"
-              ></v-text-field>
+          <v-form @submit.prevent="onSubmit">
+            <v-text-field v-model="name" :label="$t('auth.name')" prepend-inner-icon="mdi-account-outline" variant="outlined" rounded="lg" :error-messages="nameError" class="mb-1" color="primary"></v-text-field>
+            <v-text-field v-model="email" :label="$t('auth.email')" prepend-inner-icon="mdi-email-outline" type="email" variant="outlined" rounded="lg" :error-messages="emailError" class="mb-1" color="primary"></v-text-field>
+            <v-text-field v-model="password" :label="$t('auth.password')" prepend-inner-icon="mdi-lock-outline" type="password" variant="outlined" rounded="lg" :error-messages="passwordError" class="mb-1" color="primary"></v-text-field>
+            <v-text-field v-model="confirmPassword" :label="$t('auth.confirmPassword')" prepend-inner-icon="mdi-lock-check-outline" type="password" variant="outlined" rounded="lg" :error-messages="confirmPasswordError" class="mb-2" color="primary"></v-text-field>
 
-              <v-text-field
-                v-model="confirmPassword"
-                :label="$t('auth.confirmPassword')"
-                prepend-icon="mdi-lock-check"
-                type="password"
-                variant="outlined"
-                :error-messages="confirmPasswordError"
-                class="mb-4"
-              ></v-text-field>
-
-              <v-btn
-                block
-                color="secondary"
-                size="large"
-                type="submit"
-                :loading="loading"
-                variant="elevated"
-              >
-                {{ $t('auth.registerSubmit') }}
-              </v-btn>
-            </v-form>
-          </v-card-text>
-          
-          <v-card-actions class="justify-center pb-4 flex-column">
-            <v-btn variant="text" color="primary" to="/auth/login">
-              {{ $t('auth.alreadyAccount') }}
+            <v-btn block color="secondary" size="large" type="submit" :loading="loading" variant="elevated" rounded="lg" class="mt-3 text-none font-weight-bold">
+              <v-icon start>mdi-account-check</v-icon>
+              {{ $t('auth.registerSubmit') }}
             </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+          </v-form>
+        </v-card-text>
+        
+        <v-card-actions class="justify-center pb-6">
+          <v-btn variant="text" color="primary" to="/auth/login" class="text-none">
+            {{ $t('auth.alreadyAccount') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.fill-height {
+.register-wrapper {
+  display: flex;
   min-height: 100vh;
+}
+.register-brand {
+  flex: 1;
+  background: linear-gradient(135deg, #4E342E 0%, #6D4C41 40%, #8D6E63 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.register-brand::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+  animation: pulseGlow 6s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+.brand-content { text-align: center; z-index: 1; }
+.register-form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgb(var(--v-theme-background));
+}
+.register-card {
+  width: 100%;
+  max-width: 460px;
+  background: rgb(var(--v-theme-surface));
+  border: 1px solid rgba(0,0,0,0.08);
+}
+@media (max-width: 768px) {
+  .register-wrapper { flex-direction: column; }
+  .register-brand { flex: 0 0 150px; }
 }
 </style>

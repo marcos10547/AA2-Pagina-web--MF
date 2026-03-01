@@ -30,10 +30,10 @@ const emit = defineEmits<{
 
     <v-card-actions>
       <v-btn color="orange-darken-2" variant="text" prepend-icon="mdi-pencil" @click="emit('edit', product.id)">
-        Editar
+        {{ $t('admin.edit') }}
       </v-btn>
       <v-btn color="red-darken-1" variant="text" prepend-icon="mdi-delete" @click="emit('delete', product.id)">
-        Eliminar
+        {{ $t('admin.delete') }}
       </v-btn>
     </v-card-actions>
   </v-card>
