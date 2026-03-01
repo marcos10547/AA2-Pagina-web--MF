@@ -24,8 +24,8 @@ const { handleSubmit } = useForm({
   }
 })
 
-const { value: email, errorMessage: emailError } = useField<string>('email')
-const { value: password, errorMessage: passwordError } = useField<string>('password')
+const { value: email, errorMessage: emailError } = useField('email')
+const { value: password, errorMessage: passwordError } = useField('password')
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true
@@ -42,62 +42,150 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <v-container fluid class="fill-height bg-grey-lighten-4">
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4">
-        <v-card class="elevation-12 rounded-lg">
-          <v-toolbar color="primary" dark flat>
-            <v-toolbar-title class="text-center w-100">{{ $t('auth.title') }}</v-toolbar-title>
-          </v-toolbar>
-          
-          <v-card-text class="pt-6">
-            <v-form @submit.prevent="onSubmit">
-              <v-text-field
-                v-model="email"
-                :label="$t('auth.email')"
-                prepend-icon="mdi-account"
-                type="email"
-                variant="outlined"
-                :error-messages="emailError"
-                class="mb-2"
-              ></v-text-field>
+  <div class="login-wrapper">
+    <!-- Panel izquierdo decorativo -->
+    <div class="login-brand">
+      <div class="brand-content">
+        <v-icon size="80" color="white" class="mb-4">mdi-coffee</v-icon>
+        <h1 class="text-h3 font-weight-bold text-white mb-2">Cafetería</h1>
+        <p class="text-subtitle-1 text-white-darken-2" style="opacity: 0.85;">
+          {{ $t('home.subtitle') }}
+        </p>
+        <div class="brand-decoration">
+          <v-icon size="24" color="white" style="opacity:0.3" class="mx-1">mdi-coffee-outline</v-icon>
+          <v-icon size="24" color="white" style="opacity:0.3" class="mx-1">mdi-coffee-outline</v-icon>
+          <v-icon size="24" color="white" style="opacity:0.3" class="mx-1">mdi-coffee-outline</v-icon>
+        </div>
+      </div>
+    </div>
 
-              <v-text-field
-                v-model="password"
-                :label="$t('auth.password')"
-                prepend-icon="mdi-lock"
-                type="password"
-                variant="outlined"
-                :error-messages="passwordError"
-                class="mb-4"
-              ></v-text-field>
+    <!-- Panel derecho con el formulario -->
+    <div class="login-form-panel">
+      <v-card class="login-card" elevation="0" rounded="xl">
+        <v-card-text class="pa-8">
+          <div class="text-center mb-6">
+            <v-avatar color="primary" size="56" class="mb-3">
+              <v-icon size="30" color="white">mdi-lock-outline</v-icon>
+            </v-avatar>
+            <h2 class="text-h5 font-weight-bold">{{ $t('auth.title') }}</h2>
+            <p class="text-body-2 text-medium-emphasis mt-1">Introduce tus credenciales</p>
+          </div>
 
-              <v-btn
-                block
-                color="primary"
-                size="large"
-                type="submit"
-                :loading="loading"
-                variant="elevated"
-              >
-                {{ $t('auth.submit') }}
-              </v-btn>
-            </v-form>
-          </v-card-text>
-          
-          <v-card-actions class="justify-center pb-4 flex-column">
-            <v-btn variant="text" color="secondary" to="/auth/register">
-              {{ $t('auth.noAccount') }}
+          <v-form @submit.prevent="onSubmit">
+            <v-text-field
+              v-model="email"
+              :label="$t('auth.email')"
+              prepend-inner-icon="mdi-email-outline"
+              type="email"
+              variant="outlined"
+              rounded="lg"
+              :error-messages="emailError"
+              class="mb-1"
+              color="primary"
+            ></v-text-field>
+
+            <v-text-field
+              v-model="password"
+              :label="$t('auth.password')"
+              prepend-inner-icon="mdi-lock-outline"
+              type="password"
+              variant="outlined"
+              rounded="lg"
+              :error-messages="passwordError"
+              class="mb-2"
+              color="primary"
+            ></v-text-field>
+
+            <v-btn
+              block
+              color="primary"
+              size="large"
+              type="submit"
+              :loading="loading"
+              variant="elevated"
+              rounded="lg"
+              class="mt-4 text-none font-weight-bold"
+              style="letter-spacing: 0.5px;"
+            >
+              <v-icon start>mdi-login</v-icon>
+              {{ $t('auth.submit') }}
             </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+          </v-form>
+        </v-card-text>
+        
+        <v-card-actions class="justify-center pb-6 flex-column">
+          <v-btn variant="text" color="secondary" to="/auth/register" class="text-none">
+            {{ $t('auth.noAccount') }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.fill-height {
+.login-wrapper {
+  display: flex;
   min-height: 100vh;
+}
+
+.login-brand {
+  flex: 1;
+  background: linear-gradient(135deg, #4E342E 0%, #6D4C41 40%, #8D6E63 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-brand::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+  animation: pulseGlow 6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.brand-content {
+  text-align: center;
+  z-index: 1;
+}
+
+.brand-decoration {
+  margin-top: 24px;
+}
+
+.login-form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgb(var(--v-theme-background));
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgb(var(--v-theme-surface));
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+  }
+  .login-brand {
+    flex: 0 0 180px;
+  }
 }
 </style>
