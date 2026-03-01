@@ -39,8 +39,8 @@ const emit = defineEmits<{
     <v-divider></v-divider>
 
     <v-card-actions>
-      <v-btn color="secondary" variant="text" size="small" @click="emit('edit', vendor.id)">Editar</v-btn>
-      <v-btn color="error" variant="text" size="small" @click="emit('delete', vendor.id)">Eliminar</v-btn>
+      <v-btn color="secondary" variant="text" size="small" @click="emit('edit', vendor.id)">{{ $t('admin.edit') }}</v-btn>
+      <v-btn color="error" variant="text" size="small" @click="emit('delete', vendor.id)">{{ $t('admin.delete') }}</v-btn>
     </v-card-actions>
   </v-card>
 </template>

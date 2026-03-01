@@ -23,17 +23,17 @@ const emit = defineEmits<{
 
     <v-card-text>
       {{ product.description }}
-      <div class="text-h6 mt-2">{{ product.price.toFixed(2) }}€</div>
+      <div class="text-h6 mt-2">{{ Number(product.price).toFixed(2) }}€</div>
     </v-card-text>
 
     <v-divider></v-divider>
 
     <v-card-actions>
       <v-btn color="orange-darken-2" variant="text" prepend-icon="mdi-pencil" @click="emit('edit', product.id)">
-        Editar
+        {{ $t('admin.edit') }}
       </v-btn>
       <v-btn color="red-darken-1" variant="text" prepend-icon="mdi-delete" @click="emit('delete', product.id)">
-        Eliminar
+        {{ $t('admin.delete') }}
       </v-btn>
     </v-card-actions>
   </v-card>
