@@ -137,6 +137,16 @@ function handleLogout() {
 <style scoped>
 .sidebar-custom {
   background: linear-gradient(180deg, #3E2723 0%, #4E342E 100%) !important;
+  color: white !important;
+}
+.sidebar-custom :deep(.v-list-item-title),
+.sidebar-custom :deep(.v-list-item-subtitle),
+.sidebar-custom :deep(.v-list-item__prepend > .v-icon) {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.sidebar-custom :deep(.v-list-item--active .v-list-item-title),
+.sidebar-custom :deep(.v-list-item--active .v-icon) {
+  color: #FFB74D !important;
 }
 .sidebar-brand {
   padding-top: 20px !important;
