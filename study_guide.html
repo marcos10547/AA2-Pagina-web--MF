@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Defensa: AA2 Cafetería</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #120e0b;
+      --card-bg: #1c1511;
+      --card-bg-back: #261c16;
+      --primary: #d4a373;
+      --primary-rgb: 212, 163, 115;
+      --secondary: #faedcd;
+      --text: #e6dfd9;
+      --text-muted: #a39589;
+      --accent: #e07a5f;
+      --success: #81b29a;
+      --border-color: #2e231c;
+      --shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      background-image: radial-gradient(circle at 10% 20%, rgba(26, 18, 14, 0.6) 0%, transparent 60%),
+                        radial-gradient(circle at 90% 80%, rgba(46, 33, 25, 0.4) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: rgba(var(--primary-rgb), 0.15);
+      color: var(--primary);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: 1px solid rgba(var(--primary-rgb), 0.25);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Interactive Timeline */
+    .timeline-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--secondary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+      position: relative;
+    }
+
+    .timeline-item {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .timeline-item:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.04);
+      border-left-color: var(--accent);
+    }
+
+    .timeline-time {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Filters */
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--secondary);
+      border-color: var(--primary);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: var(--bg-color);
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
+    }
+
+    /* Stats Tracker */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.01);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .stat-box {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .stat-box span {
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .progress-track {
+      width: 250px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Flashcards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      perspective: 1000px; /* Crucial for 3D flip */
+      margin-bottom: 4rem;
+    }
+
+    /* The Card Structure */
+    .card-container {
+      height: 250px;
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
+
+    .card-container.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden; /* Hide the other side */
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    /* Front Face */
+    .card-front {
+      background-color: var(--card-bg);
+      color: var(--text);
+    }
+
+    .card-category {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--primary);
+    }
+
+    .card-question {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--secondary);
+      line-height: 1.4;
+      margin-top: 1rem;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .card-tip {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Back Face */
+    .card-back {
+      background-color: var(--card-bg-back);
+      color: var(--text);
+      transform: rotateY(180deg);
+      border-color: rgba(var(--primary-rgb), 0.3);
+    }
+
+    .card-answer {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      overflow-y: auto;
+      flex-grow: 1;
+      margin-bottom: 1rem;
+    }
+
+    .card-answer::-webkit-scrollbar {
+      width: 6px;
+    }
+    .card-answer::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: auto;
+      z-index: 10;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 0.4rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-review {
+      background: rgba(224, 122, 95, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(224, 122, 95, 0.25);
+    }
+
+    .btn-review:hover {
+      background: var(--accent);
+      color: var(--bg-color);
+    }
+
+    .btn-know {
+      background: rgba(129, 178, 154, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(129, 178, 154, 0.25);
+    }
+
+    .btn-know:hover {
+      background: var(--success);
+      color: var(--bg-color);
+    }
+
+    /* Git Commits Box */
+    .git-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .code-box {
+      background: #0a0806;
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      border: 1px solid #1c1511;
+      margin-top: 1rem;
+      position: relative;
+    }
+
+    .code-box code {
+      color: #9cdcfe;
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+      color: var(--bg-color);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      padding-top: 2rem;
+    }
+
+    /* Interactive Project Explorer Styles */
+    .explorer-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .explorer-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .explorer-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .folder-tree {
+      background: #0a0806;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      max-height: 450px;
+      overflow-y: auto;
+    }
+
+    .tree-node {
+      list-style: none;
+      margin-left: 1.25rem;
+      position: relative;
+    }
+
+    .tree-node::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 12px;
+      width: 8px;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .tree-node.root::before {
+      display: none;
+    }
+
+    .tree-node-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .tree-node-label:hover {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--secondary);
+    }
+
+    .tree-node-label.active {
+      background: rgba(var(--primary-rgb), 0.12);
+      color: var(--primary);
+      font-weight: 600;
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+    }
+
+    .tree-icon {
+      font-size: 1.1rem;
+    }
+
+    .explorer-details {
+      background: rgba(255, 255, 255, 0.01);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 350px;
+    }
+
+    .detail-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .detail-path {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    .detail-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--secondary);
+    }
+
+    .detail-body {
+      flex-grow: 1;
+    }
+
+    .detail-block {
+      margin-bottom: 1.25rem;
+    }
+
+    .detail-block-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-block-text {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .q-box {
+      background: rgba(var(--primary-rgb), 0.05);
+      border-left: 3px solid var(--primary);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.2rem; }
+      body { padding: 1rem 0.5rem; }
+      .timeline { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">Simulador de Defensa</div>
+      <h1>Gestión de Reservas ☕️</h1>
+      <p class="subtitle">Entrena con este simulador interactivo de preguntas y respuestas técnicas para bordar tu recuperación de 15 minutos en el aula.</p>
+    </header>
+
+    <!-- Visual Interactive Timeline -->
+    <section class="timeline-section">
+      <h2 class="section-title">⏱️ El Cronograma de los 15 Minutos</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Sigue este orden estricto de presentación para que no te falte tiempo y expongas todo.</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-time">Min -5 a 0</div>
+          <div class="timeline-title">Montaje y Setup</div>
+          <div class="timeline-desc">Abre VS Code y el navegador ya logueado. Ten la terminal lista con el comando git log.</div>
+        </div>
+        <div class="timeline-item" style="border-left-color: var(--accent);">
+          <div class="timeline-time">Min 0 a 3</div>
+          <div class="timeline-title">Justificación</div>
+          <div class="timeline-desc">Explica por qué has hecho este módulo y cómo encajan los 3 requisitos solicitados.</div>
+        </div>
+        <div class="timeline-item" style="border-left-color: var(--success);">
+          <div class="timeline-time">Min 3 a 7</div>
+          <div class="timeline-title">Demo del Panel</div>
+          <div class="timeline-desc">Crea reservas con validación, filtra en caliente, cambia estados e idioma / modo oscuro.</div>
+        </div>
+        <div class="timeline-item" style="border-left-color: var(--secondary);">
+          <div class="timeline-time">Min 7 a 11</div>
+          <div class="timeline-title">Explicación del Código</div>
+          <div class="timeline-desc">Muestra los archivos clave en el editor: Router, Tienda Pinia y Formulario con Yup.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">Min 11 a 15</div>
+          <div class="timeline-title">Preguntas del Tribunal</div>
+          <div class="timeline-desc">Demuestra solvencia técnica explicando tu estructura y muestra el git log.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters & Stats -->
+    <div class="stats-bar">
+      <div class="stat-box">Progreso: <span id="progress-text">0 / 18 dominadas</span></div>
+      <div class="stat-box">
+        Progreso de estudio:
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterCards('todas', this)">Todas las Preguntas</button>
+      <button class="filter-btn" onclick="filterCards('router', this)">Enrutador (Router)</button>
+      <button class="filter-btn" onclick="filterCards('pinia', this)">Tienda (Pinia)</button>
+      <button class="filter-btn" onclick="filterCards('vue', this)">Conceptos Vue 3</button>
+      <button class="filter-btn" onclick="filterCards('vistas', this)">Vistas y Validación</button>
+      <button class="filter-btn" onclick="filterCards('arquitectura', this)">Arquitectura / DB</button>
+    </div>
+
+    <!-- Flashcards Container -->
+    <div class="cards-grid" id="cards-grid">
+      
+      <!-- Card 1 -->
+      <div class="card-container" data-category="router" id="card-1">
+        <div class="card-face card-front">
+          <div class="card-category">Enrutador (Router)</div>
+          <div class="card-question">¿Cómo proteges la ruta de reservas de usuarios intrusos?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Enrutador (Router)</div>
+          <div class="card-answer">
+            En <strong>router/index.ts</strong> la ruta <code>/admin/reservations</code> está definida bajo los hijos (<code>children</code>) del Layout Admin, con la propiedad <code>meta: { requiresAuth: true }</code>.<br><br>
+            En el guard global <code>router.beforeEach</code> interceptamos la navegación. Si una ruta requiere autenticación y el usuario no posee un token JWT válido en su tienda (<code>authStore.isAuthenticated</code> es falso), lo redirigimos automáticamente a la pantalla de login bloqueando la vista.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(1, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(1, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card-container" data-category="pinia" id="card-2">
+        <div class="card-face card-front">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-question">¿Qué operaciones implementa tu store de Pinia para este módulo?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-answer">
+            En <strong>stores/reservation.ts</strong> centralizamos el estado en un array reactivo <code>reservations</code> y definimos 4 operaciones asíncronas:<br><br>
+            1. <code>fetchReservations()</code>: Realiza un GET a la API.<br>
+            2. <code>addReservation()</code>: Hace un POST con el formulario y actualiza el estado local con <code>.push()</code>.<br>
+            3. <code>updateReservationStatus()</code>: Envía un PUT para cambiar el estado (confirmar/cancelar).<br>
+            4. <code>deleteReservation()</code>: Envía un DELETE y remueve la reserva con <code>.filter()</code>.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(2, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(2, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card-container" data-category="vistas" id="card-3">
+        <div class="card-face card-front">
+          <div class="card-category">Vistas y Validación</div>
+          <div class="card-question">¿Cómo validas los campos del nuevo formulario de reservas?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Vistas y Validación</div>
+          <div class="card-answer">
+            En <strong>ReservationForm.vue</strong> usamos <strong>VeeValidate 4</strong> y esquemas de validación <strong>Yup</strong>.<br><br>
+            Definimos un esquema declarativo indicando que el nombre es requerido (mínimo 2 caracteres), el teléfono es obligatorio, y el número de personas está limitado estrictamente de 1 a 20. Con <code>useForm</code> y <code>useField</code> enlazamos las propiedades de error y las inyectamos dinámicamente en los inputs de Vuetify bloqueando el botón de guardar si existen fallos de validación.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(3, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(3, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card-container" data-category="vistas" id="card-4">
+        <div class="card-face card-front">
+          <div class="card-category">Vistas y Validación</div>
+          <div class="card-question">¿Por qué utilizas una propiedad computada (computed) para filtrar las reservas por estado?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Vistas y Validación</div>
+          <div class="card-answer">
+            Para evitar hacer llamadas innecesarias de red al servidor. Al montar la vista de <strong>ReservationList.vue</strong>, cargamos todas las reservas de la base de datos una sola vez.<br><br>
+            Al cambiar de pestaña (Pendiente, Confirmada, Cancelada), la propiedad computada <code>filteredReservations</code> filtra el array reactivo en memoria en el cliente con latencia cero, ofreciendo un rendimiento inmediato al usuario final.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(4, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(4, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card-container" data-category="arquitectura" id="card-5">
+        <div class="card-face card-front">
+          <div class="card-category">Arquitectura / DB</div>
+          <div class="card-question">¿Qué es el archivo reservation.dto.ts y qué función cumple?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Arquitectura / DB</div>
+          <div class="card-answer">
+            En <strong>core/reservation.dto.ts</strong> definimos la interfaz <code>ReservationDTO</code> en TypeScript.<br><br>
+            Sirve para modelar de forma rígida los datos en el frontend, previniendo errores de programación al compilar. Además, nos permite mapear las diferencias entre la base de datos (que usa nombres de columna con guiones bajos <code>snake_case</code>, como <code>customer_name</code>) y las buenas prácticas del frontend (que usan <code>camelCase</code>, como <code>customerName</code>) mediante funciones helper en el Store.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(5, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(5, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card-container" data-category="arquitectura" id="card-6">
+        <div class="card-face card-front">
+          <div class="card-category">Arquitectura / DB</div>
+          <div class="card-question">¿Cómo se comunican el Frontend SPA y el Backend API en este proyecto?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Arquitectura / DB</div>
+          <div class="card-answer">
+            Siguen una arquitectura desacoplada. El frontend corre en el navegador e inicia llamadas asíncronas HTTP (mediante el API estándar <code>fetch</code> de JavaScript) hacia el servidor API local de Express configurado por la variable de entorno <code>VITE_API_URL</code> (puerto 3000 por defecto).<br><br>
+            El backend recibe las peticiones, realiza validaciones, comprueba tokens de seguridad, ejecuta sentencias sobre PostgreSQL y responde enviando objetos de datos en formato JSON.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(6, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(6, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="card-container" data-category="vistas" id="card-7">
+        <div class="card-face card-front">
+          <div class="card-category">Vistas y Validación</div>
+          <div class="card-question">¿Cómo alertas al usuario sobre un éxito o error de forma estética?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Vistas y Validación</div>
+          <div class="card-answer">
+            Siguiendo las restricciones de "no utilizar alertas del sistema (alert)", la aplicación implementa notificaciones mediante un <strong>Snackbar de Vuetify</strong>.<br><br>
+            Lanzamos notificaciones llamando de forma centralizada al método <code>uiStore.showNotify(mensaje, color)</code>. Este método actualiza de forma reactiva el estado global de UI en Pinia, levantando visualmente una pequeña tarjeta flotante animada que se autodesvanece tras 3 segundos.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(7, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(7, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="card-container" data-category="arquitectura" id="card-8">
+        <div class="card-face card-front">
+          <div class="card-category">Arquitectura / DB</div>
+          <div class="card-question">¿Cómo se garantiza la persistencia física y seguridad de las reservas?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Arquitectura / DB</div>
+          <div class="card-answer">
+            La tabla <code>reservations</code> está definida en PostgreSQL en [init.sql] con clave primaria auto-incremental, campos mandatorios y valores por defecto (status pendiente).<br><br>
+            Para garantizar la seguridad, el backend realiza <strong>consultas parametrizadas seguras</strong> (mediante placeholders <code>$1, $2, ...</code> de la librería <code>pg</code>) lo que mitiga e impide al 100% ataques de <strong>Inyección SQL</strong> al procesar textos enviados por clientes maliciosos en inputs libres (como las notas de la reserva).
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(8, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(8, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="card-container" data-category="vue" id="card-9">
+        <div class="card-face card-front">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-question">¿Qué es la Composition API y por qué usamos &lt;script setup&gt;?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-answer">
+            Es el modelo moderno de estructuración de componentes de Vue 3. La etiqueta <code>&lt;script setup&gt;</code> es azúcar sintáctico que simplifica el desarrollo e incrementa el rendimiento.<br><br>
+            Nos permite declarar el estado asíncrono, variables reactivas, funciones y componentes importados directamente en el bloque script, haciéndolos disponibles de forma automática para el template HTML sin necesidad de exportaciones explícitas o de usar un bloque <code>return</code> (como en la clásica Options API).
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(9, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(9, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 10 -->
+      <div class="card-container" data-category="vue" id="card-10">
+        <div class="card-face card-front">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-question">¿Cuál es la diferencia técnica entre ref() y computed()?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-answer">
+            <strong>ref()</strong> define un estado reactivo base y mutable (cualquier tipo de datos). En JavaScript accedemos/modificamos su valor usando <code>.value</code>, y en el template de Vue se desenvuelve de forma automática sin el sufijo.<br><br>
+            <strong>computed()</strong> genera una propiedad reactiva derivada de otros estados. Es de solo lectura y tiene un <strong>mecanismo de caché interno</strong>: solo se vuelve a ejecutar si alguna de las dependencias reactivas que contiene en su función cambia, ahorrando ciclos de CPU y renderizados.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(10, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(10, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="card-container" data-category="vue" id="card-11">
+        <div class="card-face card-front">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-question">¿Qué es onMounted() y para qué se utiliza en este módulo?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-answer">
+            Es un gancho del ciclo de vida (<strong>Lifecycle Hook</strong>) de Vue 3.<br><br>
+            Se ejecuta automáticamente una única vez justo después de que el componente ha terminado su renderizado inicial y su nodo del DOM físico ha sido insertado en el navegador. Es el momento perfecto para cargar datos desde servicios externos, por lo que en <code>ReservationList.vue</code> lo usamos para disparar la acción <code>fetchReservations()</code> de Pinia y alimentar nuestra tabla.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(11, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(11, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 12 -->
+      <div class="card-container" data-category="vue" id="card-12">
+        <div class="card-face card-front">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-question">¿Cómo se comunican tus componentes mediante Props y Emits?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-answer">
+            Sigue el flujo unidireccional de datos de Vue (<em>Props Down, Events Up</em>).<br><br>
+            El componente padre (<code>ReservationList.vue</code>) le transfiere variables al componente hijo mediante <strong>Props</strong> (atributos con prefijo <code>:</code>). A su vez, el hijo (<code>ReservationForm.vue</code>) utiliza <code>defineEmits</code> para declarar eventos de salida. Al guardar la reserva, el hijo ejecuta <code>emit('save', datos)</code>, gatillando el método asíncrono <code>onSave</code> en el padre para registrar los datos.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(12, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(12, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 13 -->
+      <div class="card-container" data-category="vue" id="card-13">
+        <div class="card-face card-front">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-question">¿Qué es y cómo funciona el doble enlace de datos (v-model)?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Conceptos Vue 3</div>
+          <div class="card-answer">
+            <code>v-model</code> proporciona <strong>Two-way Data Binding</strong> (doble enlace de datos en tiempo real) en elementos de formulario.<br><br>
+            Es un atajo de Vue que combina dos acciones: pasa el valor de una variable reactiva de JavaScript al atributo <code>value</code> del input del navegador (prop), y a la vez escucha el evento <code>input</code> del elemento para actualizar automáticamente la variable cuando el usuario escribe. Permite mantener sincronizados en todo momento los inputs del usuario con el estado del componente.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(13, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(13, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 14 -->
+      <div class="card-container" data-category="pinia" id="card-14">
+        <div class="card-face card-front">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-question">¿Qué es Pinia y por qué se prefiere al estado local en aplicaciones reales?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-answer">
+            Pinia es el gestor oficial de estado centralizado para Vue 3. En proyectos reales, múltiples vistas y layouts necesitan compartir y modificar la misma información (como la sesión del usuario o las reservas actuales).<br><br>
+            Si usáramos estado local en componentes, tendríamos que pasar datos y eventos a través de muchos niveles jerárquicos (<strong>Prop Drilling</strong>), haciendo el código rígido y propenso a errores. Pinia crea un almacén centralizado e independiente que cualquier componente puede inyectar y escuchar reactivamente en tiempo real.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(14, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(14, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 15 -->
+      <div class="card-container" data-category="pinia" id="card-15">
+        <div class="card-face card-front">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-question">¿Cuáles son las tres partes fundamentales de un Store en Pinia?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-answer">
+            Un Store de Pinia se define con <code>defineStore</code> y consta de:<br><br>
+            1. <strong>State:</strong> Una función que retorna un objeto con las variables reactivas (datos en memoria, ej. <code>reservations: []</code>). Equivale al <code>ref()</code>.<br>
+            2. <strong>Actions:</strong> Métodos (síncronos o asíncronos) que contienen la lógica de negocio y las llamadas a la API para modificar el state (ej. <code>fetchReservations()</code>). Equivale a funciones.<br>
+            3. <strong>Getters:</strong> Propiedades computadas basadas en el state. Tienen memoria caché (ej. obtener reservas pendientes). Equivale al <code>computed()</code>.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(15, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(15, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 16 -->
+      <div class="card-container" data-category="pinia" id="card-16">
+        <div class="card-face card-front">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-question">¿Qué stores tiene este proyecto y de qué se encarga cada uno?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-answer">
+            Tu proyecto implementa 5 stores modulares en <code>frontend/src/stores/</code>:<br><br>
+            - <strong>auth.ts:</strong> Gestiona la sesión del usuario (token JWT, roles, inicio/cierre de sesión).<br>
+            - <strong>reservation.ts:</strong> Mantiene las reservas reactivas y se comunica con los endpoints HTTP (CRUD).<br>
+            - <strong>ui.ts:</strong> Controla el estado visual global, como notificaciones Snackbar y spinners de carga.<br>
+            - <strong>product.ts y vendor.ts:</strong> Gestionan respectivamente el catálogo de productos y los proveedores de la cafetería.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(16, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(16, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 17 -->
+      <div class="card-container" data-category="pinia" id="card-17">
+        <div class="card-face card-front">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-question">¿Cómo cooperan el store de reservas (reservation.ts) y el store de interfaz (ui.ts)?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-answer">
+            Se comunican e integran de forma reactiva en la vista. Por ejemplo, en <code>ReservationList.vue</code>, cuando el usuario completa el formulario, la vista invoca la acción <code>reservationStore.addReservation()</code>.<br><br>
+            Si la promesa HTTP se resuelve con éxito, la vista invoca inmediatamente a <code>uiStore.showNotify('Reserva creada', 'success')</code>. Esto delega la respuesta visual al store de UI sin mezclar la lógica de datos con la lógica visual, manteniendo el código limpio y modular.
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(17, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(17, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 18 -->
+      <div class="card-container" data-category="pinia" id="card-18">
+        <div class="card-face card-front">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-question">¿Cómo se extraen datos de un Store de Pinia en Vue 3 sin perder la reactividad?</div>
+          <div class="card-tip">✨ Haz clic para ver la respuesta técnica...</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-category">Tienda (Pinia)</div>
+          <div class="card-answer">
+            Si en el script de Vue destructuramos el store de forma directa: <code>const { reservations } = reservationStore</code>, <strong>se rompe la reactividad</strong> de inmediato y la interfaz no se redibujará cuando los datos cambien.<br><br>
+            Para mantener la reactividad al extraer datos, debemos envolver el store en el helper <code>storeToRefs</code> de Pinia: <code>const { reservations } = storeToRefs(reservationStore)</code>.<br>
+            <em>Nota: Las acciones son funciones y no contienen estado reactivo, por lo que se pueden desestructurar directamente.</em>
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-review" onclick="markCard(18, 'review', event)">Repasar ⚠️</button>
+            <button class="action-btn btn-know" onclick="markCard(18, 'know', event)">Me la sé! ✅</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Interactive Folder Explorer (Completely outside the cards-grid!) -->
+    <section class="explorer-section">
+      <h2 class="section-title">📂 Explorador Interactivo del Proyecto</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">Haz clic en cualquier carpeta o archivo de la estructura para ver qué hace, su rol en tu recuperación y posibles preguntas del examen.</p>
+      
+      <div class="explorer-container">
+        <!-- Left: Tree View -->
+        <div class="folder-tree">
+          <div class="tree-node root">
+            <div class="tree-node-label active" onclick="selectNode('root')">
+              <span class="tree-icon">📂</span> <span>AA2-Pagina-web--MF/ (Raíz)</span>
+            </div>
+            
+            <div class="tree-node">
+              <div class="tree-node-label" onclick="selectNode('docker')">
+                <span class="tree-icon">📄</span> <span>docker-compose.yml</span>
+              </div>
+            </div>
+
+            <!-- Backend -->
+            <div class="tree-node">
+              <div class="tree-node-label" onclick="selectNode('backend')">
+                <span class="tree-icon">📂</span> <span>backend/ (Servidor API)</span>
+              </div>
+              
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('server')">
+                  <span class="tree-icon">📄</span> <span>server.js</span>
+                </div>
+              </div>
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('db')">
+                  <span class="tree-icon">📄</span> <span>db.js</span>
+                </div>
+              </div>
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('init_sql')">
+                  <span class="tree-icon">📄</span> <span>init.sql</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Frontend -->
+            <div class="tree-node">
+              <div class="tree-node-label" onclick="selectNode('frontend')">
+                <span class="tree-icon">📂</span> <span>frontend/ (Cliente Web)</span>
+              </div>
+              
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('main')">
+                  <span class="tree-icon">📄</span> <span>src/main.ts</span>
+                </div>
+              </div>
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('app')">
+                  <span class="tree-icon">📄</span> <span>src/App.vue</span>
+                </div>
+              </div>
+
+              <!-- Core -->
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('core')">
+                  <span class="tree-icon">📂</span> <span>src/core/ (DTOs / Tipado)</span>
+                </div>
+              </div>
+
+              <!-- Components -->
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('components')">
+                  <span class="tree-icon">📂</span> <span>src/components/ (Modulares)</span>
+                </div>
+              </div>
+
+              <!-- Views -->
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('views')">
+                  <span class="tree-icon">📂</span> <span>src/views/ (Páginas)</span>
+                </div>
+              </div>
+
+              <!-- Layouts -->
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('layouts')">
+                  <span class="tree-icon">📂</span> <span>src/layouts/ (Plantillas)</span>
+                </div>
+              </div>
+
+              <!-- Stores -->
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('stores')">
+                  <span class="tree-icon">📂</span> <span>src/stores/ (Pinia Stores)</span>
+                </div>
+              </div>
+
+              <!-- Router -->
+              <div class="tree-node">
+                <div class="tree-node-label" onclick="selectNode('router')">
+                  <span class="tree-icon">📂</span> <span>src/router/ (Enrutador)</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Detail Panel -->
+        <div class="explorer-details" id="explorer-details">
+          <div class="detail-header">
+            <span class="detail-path" id="detail-path">/</span>
+            <h3 class="detail-title" id="detail-title">Selecciona un elemento</h3>
+          </div>
+          
+          <div class="detail-body">
+            <div class="detail-block">
+              <div class="detail-block-title" id="block-1-title">Rol en el proyecto</div>
+              <div class="detail-block-text" id="block-1-text">Haz clic en cualquier archivo o carpeta de la estructura del árbol de la izquierda para analizar sus responsabilidades arquitectónicas de inmediato.</div>
+            </div>
+
+            <div class="detail-block">
+              <div class="detail-block-title" id="block-2-title">Relación con la recuperación</div>
+              <div class="detail-block-text" id="block-2-text">Te mostraremos cómo este elemento específico contiene o afecta a los tres requisitos de tu recuperación.</div>
+            </div>
+
+            <div class="detail-block" id="block-q-container" style="display: none;">
+              <div class="detail-block-title">Pregunta típica de defensa</div>
+              <div class="q-box">
+                <strong style="color: var(--secondary); font-size: 0.9rem;" id="q-title">Pregunta</strong>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;" id="q-text">Respuesta</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Copiar Commits Section -->
+    <section class="git-section">
+      <h2 class="section-title">📊 Referencia del Git Log</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.75rem;">Para cumplir la directriz de revisar tus commits en local, puedes copiar este comando en la consola de tu proyecto:</p>
+      <div class="code-box">
+        <button class="copy-btn" onclick="copyGitCommand()">Copiar comando</button>
+        <code id="git-code">git log --oneline -n 10</code>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem; font-style: italic;">
+        💡 Tus commits muestran el desarrollo secuencial del módulo de reservas, abarcando desde las tablas de base de datos hasta la interfaz reactiva multiidioma.
+      </p>
+    </section>
+
+    <footer>
+      Desarrollado para ayudarte a triunfar en tu defensa oral de recuperación. ¡Estudia las tarjetas y consigue ese 10! 🚀🎓
+    </footer>
+  </div>
+
+  <script>
+    // Flip interaction
+    document.querySelectorAll('.card-container').forEach(card => {
+      card.addEventListener('click', function(e) {
+        // Evitar voltear si se hace clic en botones de acción
+        if (e.target.classList.contains('action-btn')) return;
+        this.classList.toggle('flipped');
+      });
+    });
+
+    // Filtering cards
+    function filterCards(category, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.card-container');
+      cards.forEach(card => {
+        card.classList.remove('flipped'); // Reset flippping when filtering
+        const cardCat = card.getAttribute('data-category');
+        if (category === 'todas' || cardCat === category) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Stats and state
+    const cardStates = {};
+    const totalCards = 18;
+
+    function markCard(id, status, event) {
+      event.stopPropagation();
+      const card = document.getElementById(`card-${id}`);
+      
+      if (status === 'know') {
+        cardStates[id] = 'know';
+        card.querySelector('.card-back').style.borderColor = 'var(--success)';
+      } else {
+        cardStates[id] = 'review';
+        card.querySelector('.card-back').style.borderColor = 'var(--accent)';
+      }
+
+      // Close card
+      setTimeout(() => {
+        card.classList.remove('flipped');
+      }, 150);
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const knownCount = Object.values(cardStates).filter(s => s === 'know').length;
+      document.getElementById('progress-text').innerText = `${knownCount} / ${totalCards} dominadas`;
+      
+      const pct = (knownCount / totalCards) * 100;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+    }
+
+    // Copy command
+    function copyGitCommand() {
+      const code = document.getElementById('git-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.innerText = '¡Copiado!';
+        btn.style.backgroundColor = 'var(--success)';
+        btn.style.color = 'var(--bg-color)';
+        setTimeout(() => {
+          btn.innerText = 'Copiar comando';
+          btn.style.backgroundColor = 'rgba(255,255,255,0.05)';
+          btn.style.color = 'var(--text-muted)';
+        }, 1500);
+      });
+    }
+
+    // Interactive Explorer Nodes Data
+    const nodeData = {
+      root: {
+        path: "AA2-Pagina-web--MF/",
+        title: "Carpeta Raíz del Proyecto",
+        role: "Es el directorio principal del sistema. Sigue un patrón de desarrollo desacoplado agrupado en dos subproyectos principales ('frontend' y 'backend'), facilitando la separación física entre la lógica de negocio y la interfaz de usuario.",
+        relation: "Contiene las configuraciones globales de despliegue contenerizado y unifica las dos carpetas bajo un único control de versiones de Git.",
+        qTitle: "¿Cómo se organiza la arquitectura global de este proyecto?",
+        qText: "Sigue un patrón modular y cliente-servidor desacoplado. El frontend es una SPA reactiva en Vue 3 y el backend es una API RESTful en Express.js con base de datos PostgreSQL."
+      },
+      docker: {
+        path: "AA2-Pagina-web--MF/docker-compose.yml",
+        title: "Orquestador de Contenedores",
+        role: "Define y configura todo el ecosistema de red y servicios de la cafetería: la base de datos PostgreSQL (puerto 5433), el Backend (puerto 3000) y el Frontend de desarrollo (puerto 5173). Permite levantar toda la infraestructura con un único comando.",
+        relation: "Inyecta la variable de entorno 'VITE_API_URL' en el contenedor del frontend y expone la base de datos en un puerto local alternativo para no causar colisión con otros Postgres.",
+        qTitle: "¿Por qué el puerto de PostgreSQL en tu docker-compose es 5433 en lugar del tradicional 5432?",
+        qText: "Para evitar conflictos en la máquina del evaluador. Si el ordenador local del aula ya tiene instalado PostgreSQL ejecutándose en el puerto por defecto (5432), tu base de datos dockerizada fallaría al arrancar. Exponerla externamente en el puerto 5433 soluciona este conflicto."
+      },
+      backend: {
+        path: "AA2-Pagina-web--MF/backend/",
+        title: "Directorio del Backend (Servidor)",
+        role: "Contiene el servidor de backend construido con Node.js y Express. Se encarga de procesar peticiones HTTP asíncronas, validar tokens de autenticación, realizar cifrado de contraseñas y ejecutar queries en la base de datos.",
+        relation: "Aquí se añadieron las rutas CRUD para gestionar las reservas y la definición de la tabla física 'reservations' para persistir la recuperación.",
+        qTitle: "¿Qué librerías de Node.js son fundamentales en tu backend?",
+        qText: "'express' para el servidor y enrutamiento API, 'cors' para permitir llamadas de origen cruzado desde el frontend, 'jsonwebtoken' para emitir y verificar accesos protegidos, 'bcryptjs' para encriptar contraseñas, y 'pg' para el cliente de PostgreSQL."
+      },
+      server: {
+        path: "AA2-Pagina-web--MF/backend/server.js",
+        title: "Servidor Principal de Express",
+        role: "Es el núcleo del backend. Carga los módulos, inicializa Express, configura los middlewares globales (CORS, JSON parse), define las rutas de API REST (Auth, Products, Vendors, Reservations) y arranca el servidor en el puerto 3000.",
+        relation: "Contiene las nuevas rutas CRUD '/api/reservations' creadas para dar soporte de datos al módulo de reservas de la recuperación.",
+        qTitle: "¿Qué hace la ruta POST /api/reservations en tu server.js?",
+        qText: "Recibe un cuerpo JSON con los datos de la reserva, realiza un INSERT parametrizado en la base de datos y, si tiene éxito, responde enviando la fila recién creada con estado HTTP 201 (Created) en formato JSON."
+      },
+      db: {
+        path: "AA2-Pagina-web--MF/backend/db.js",
+        title: "Configuración del Cliente PostgreSQL",
+        role: "Configura e inicializa el Pool de conexiones del paquete 'pg' de Node.js utilizando las credenciales cargadas de las variables de entorno (.env). Permite compartir de forma eficiente y segura la conexión a la base de datos en todas las rutas.",
+        relation: "Da soporte a todas las operaciones CRUD de base de datos de tu nuevo módulo de reservas mediante el pool de conexiones.",
+        qTitle: "¿Por qué utilizas un Pool de conexiones (pg.Pool) en lugar de una conexión individual?",
+        qText: "Para optimizar el rendimiento y la concurrencia del servidor. Un Pool mantiene un conjunto de conexiones calientes abiertas. Cuando llega una petición REST, toma una conexión libre, hace el query y la devuelve de inmediato al pool, evitando la sobrecarga de crear y destruir una conexión física en cada petición."
+      },
+      init_sql: {
+        path: "AA2-Pagina-web--MF/backend/init.sql",
+        title: "Script SQL de Inicialización",
+        role: "Contiene las sentencias DDL (Data Definition Language) para la creación de tablas (users, products, vendors, reservations) e inserción DML de datos semillas de prueba y el administrador por defecto.",
+        relation: "Define la estructura física de la nueva tabla 'reservations' necesaria para persistir las reservas de la recuperación.",
+        qTitle: "¿Qué columnas y tipos tiene tu tabla reservations en el script init.sql?",
+        qText: "Posee 'id' (SERIAL PRIMARY KEY), 'customer_name' (VARCHAR NOT NULL), 'phone' (VARCHAR), 'date' y 'time' (VARCHAR NOT NULL), 'guests' (INTEGER NOT NULL DEFAULT 2), 'status' (VARCHAR NOT NULL DEFAULT 'pendiente'), y 'notes' (TEXT)."
+      },
+      frontend: {
+        path: "AA2-Pagina-web--MF/frontend/",
+        title: "Directorio del Frontend (Cliente)",
+        role: "Contiene la SPA (Single Page Application) construida con Vue 3, TypeScript y compilada con Vite. Utiliza Vuetify 3 para el sistema de diseño y Pinia para el estado centralizado.",
+        relation: "Es el núcleo de los 3 requisitos de tu examen: contiene tus nuevas vistas (views), las nuevas rutas (router) y el nuevo store (Pinia).",
+        qTitle: "¿Cuál es el rol de Vite en tu proyecto frontend?",
+        qText: "Es nuestra herramienta de desarrollo y empaquetador (Bundler) moderno de última generación. Reemplaza a Webpack y proporciona arranque ultrarrápido y recarga de módulos en caliente (HMR) inmediata durante el desarrollo."
+      },
+      main: {
+        path: "AA2-Pagina-web--MF/frontend/src/main.ts",
+        title: "Bootstrap de la Aplicación Vue",
+        role: "Punto de entrada de JavaScript/TypeScript. Inicializa la instancia raíz de Vue, registra el enrutador, la tienda Pinia, el framework de estilos Vuetify y el sistema de multiidioma (i18n), y monta la aplicación en el DOM físico (index.html).",
+        relation: "Registra en el ecosistema global de Vue todas las librerías necesarias para dar soporte a tu nuevo módulo (como el store Pinia de reservas y el i18n).",
+        qTitle: "¿En qué orden se registran los plugins en tu main.ts?",
+        qText: "Primero instanciamos createApp, después instalamos Pinia (createPinia()), registramos el Router, Vuetify, i18n y finalmente montamos con app.mount('#app'). Registrar Pinia antes que el Router es clave para que las guardias de navegación puedan leer stores."
+      },
+      app: {
+        path: "AA2-Pagina-web--MF/frontend/src/App.vue",
+        title: "Componente Raíz de Vue",
+        role: "Es el componente base. Renderiza el '<router-view />' principal del sistema y contiene el Snackbar de Vuetify global utilizado para las notificaciones estéticas de éxito o error.",
+        relation: "Contiene el Snackbar reactivo que se activa en pantalla cada vez que realizas un CRUD sobre reservas (crear, confirmar, eliminar).",
+        qTitle: "¿Cómo funciona el Snackbar global en tu App.vue?",
+        qText: "Está vinculado mediante v-model bidireccional a la variable global 'uiStore.snackbar.show'. Cuando modificamos esa variable desde cualquier store o vista del proyecto, el Snackbar de App.vue se activa automáticamente en pantalla."
+      },
+      core: {
+        path: "AA2-Pagina-web--MF/frontend/src/core/",
+        title: "Capa Core y Contratos de Datos",
+        role: "Contiene las definiciones de interfaces, DTOs y tipos estrictos de TypeScript que garantizan la consistencia de datos en todo el cliente web.",
+        relation: "Contiene 'reservation.dto.ts' que define estrictamente el tipado de los campos de tu reserva en el frontend.",
+        qTitle: "¿Por qué utilizas TypeScript y DTOs en este directorio?",
+        qText: "Para garantizar tipado fuerte y prevenir errores de desarrollo (como variables mal escritas) en tiempo de compilación. El DTO actúa como un contrato estricto de los datos que viajan entre cliente y servidor."
+      },
+      components: {
+        path: "AA2-Pagina-web--MF/frontend/src/components/",
+        title: "Componentes Modulares Reutilizables",
+        role: "Contiene elementos visuales pequeños y autónomos (cajas, botones, cards). Ayuda a mantener la modularidad sin duplicar código de interfaz.",
+        relation: "Contiene el componente 'ReservationForm.vue' que encapsula el formulario y la lógica de validación de datos con VeeValidate/Yup.",
+        qTitle: "¿Por qué el formulario de reservas se separa en un componente independiente en lugar de ir en la vista principal?",
+        qText: "Por separación de responsabilidades y modularidad. Mantiene el archivo de la vista principal corto y legible enfocado en la tabla, y encapsula de forma aislada la compleja lógica de validación del formulario con Yup y VeeValidate."
+      },
+      views: {
+        path: "AA2-Pagina-web--MF/frontend/src/views/",
+        title: "Vistas de la Aplicación (Páginas)",
+        role: "Contiene las páginas de alto nivel correspondientes a las URLs del enrutador. Suelen importar y componer componentes más pequeños y conectar con Pinia.",
+        relation: "Contiene 'admin/ReservationList.vue', que representa el nuevo panel administrativo del CRUD de reservas.",
+        qTitle: "¿Qué diferencia técnica hay entre una View y un Component en Vue?",
+        qText: "Conceptualmente, una View (vista) representa una pantalla de página completa mapeada por una ruta de Vue Router. Un Component (componente) es un elemento visual reutilizable que se importa y se renderiza dentro de una Vista."
+      },
+      layouts: {
+        path: "AA2-Pagina-web--MF/frontend/src/layouts/",
+        title: "Layouts (Plantillas de Página)",
+        role: "Plantillas estructurales que encapsulan la envoltura común de la página (menú lateral, toolbar superior). Utilizan '<router-view />' para renderizar las vistas dentro de sí.",
+        relation: "Contiene 'AdminLayout.vue', que dibuja el Sidebar lateral café y la barra de navegación del panel administrativo.",
+        qTitle: "¿Cómo funciona la renderización de layouts en Vue?",
+        qText: "El enrutador asocia una URL a un layout. Este layout renderiza la estructura común (sidebar, cabecera) y coloca un componente '<router-view />' central, donde Vue Router inyectará dinámicamente la vista específica asociada a la ruta hija."
+      },
+      stores: {
+        path: "AA2-Pagina-web--MF/frontend/src/stores/",
+        title: "Gestión de Estado Centralizado (Pinia)",
+        role: "Contiene los almacenes de datos reactivos del frontend. Actúa como el cerebro del frontend, aislando la lógica de negocio y las peticiones HTTP asíncronas de la parte visual.",
+        relation: "Contiene 'reservation.ts', el nuevo store reactivo que se encarga del CRUD de reservas y se comunica con la API.",
+        qTitle: "¿Qué stores implementa el frontend y qué hace el store de reservas?",
+        qText: "Tiene 5 stores: auth, ui, product, vendor y reservation. El store de reservas expone el array reactivo 'reservations' y las acciones asíncronas fetch (GET, POST, PUT, DELETE) para comunicarse de forma segura con la API del backend."
+      },
+      router: {
+        path: "AA2-Pagina-web--MF/frontend/src/router/",
+        title: "Directorio de Rutas (Vue Router)",
+        role: "Configura el mapeo de URLs a sus respectivos componentes y layouts, y controla la navegación del usuario en el navegador.",
+        relation: "Contiene 'index.ts', donde se configuró la nueva ruta '/admin/reservations' protegida mediante navigation guards.",
+        qTitle: "¿Cómo proteges la ruta de reservas de usuarios no autenticados en el router?",
+        qText: "En router/index.ts marcamos la ruta con 'meta: { requiresAuth: true }'. El hook de navegación 'beforeEach' intercepta cada viaje y, si detecta esta meta-propiedad y el usuario no está logueado en su sesión local, cancela la navegación y lo redirige automáticamente al login."
+      }
+    };
+
+    function selectNode(nodeKey) {
+      // Toggle active classes on tree buttons
+      document.querySelectorAll('.tree-node-label').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = event.currentTarget;
+      activeBtn.classList.add('active');
+
+      const data = nodeData[nodeKey];
+      if (!data) return;
+
+      // Update detail panel
+      document.getElementById('detail-path').innerText = data.path;
+      document.getElementById('detail-title').innerText = data.title;
+      document.getElementById('block-1-text').innerText = data.role;
+      document.getElementById('block-2-text').innerText = data.relation;
+
+      // Show question block
+      const qContainer = document.getElementById('block-q-container');
+      if (data.qTitle) {
+        qContainer.style.display = 'block';
+        document.getElementById('q-title').innerText = data.qTitle;
+        document.getElementById('q-text').innerText = data.qText;
+      } else {
+        qContainer.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

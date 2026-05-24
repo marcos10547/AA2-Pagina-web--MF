@@ -32,6 +32,7 @@
         "dashboard": "Dashboard",
         "products": "Productos",
         "vendors": "Proveedores",
+        "reservations": "Reservas",
         "logout": "Cerrar Sesión",
         "dashboardTitle": "Panel de Administración",
         "productsInInventory": "Productos en Inventario",
@@ -57,5 +58,26 @@
         "company": "Empresa",
         "contactPerson": "Persona de Contacto",
         "phone": "Teléfono"
+    },
+    "reservations": {
+        "title": "Gestión de Reservas",
+        "new": "Nueva Reserva",
+        "newTitle": "Crear Nueva Reserva",
+        "customer": "Nombre del Cliente",
+        "phone": "Teléfono",
+        "date": "Fecha",
+        "time": "Hora",
+        "guests": "Comensales",
+        "status": "Estado",
+        "notes": "Observaciones",
+        "actions": "Acciones",
+        "empty": "No hay reservas para mostrar",
+        "filterAll": "Todas",
+        "filterPending": "Pendientes",
+        "filterConfirmed": "Confirmadas",
+        "filterCancelled": "Canceladas",
+        "status_pendiente": "Pendiente",
+        "status_confirmada": "Confirmada",
+        "status_cancelada": "Cancelada"
     }
 }

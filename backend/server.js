@@ -180,6 +180,58 @@ app.delete('/api/vendors/:id', async (req, res) => {
     }
 });
 
+// --- ROUTES: RESERVATIONS ---
+
+// Listar todas
+app.get('/api/reservations', async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM reservations ORDER BY date ASC, time ASC');
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Crear una
+app.post('/api/reservations', async (req, res) => {
+    const { customer_name, phone, date, time, guests, status, notes } = req.body;
+    try {
+        const result = await db.query(
+            'INSERT INTO reservations (customer_name, phone, date, time, guests, status, notes) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [customer_name, phone, date, time, guests, status || 'pendiente', notes || '']
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Actualizar estado
+app.put('/api/reservations/:id', async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        const result = await db.query(
+            'UPDATE reservations SET status=$1 WHERE id=$2 RETURNING *',
+            [status, id]
+        );
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Borrar una
+app.delete('/api/reservations/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await db.query('DELETE FROM reservations WHERE id = $1', [id]);
+        res.status(204).send();
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Levantar servidor
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);

@@ -46,3 +46,24 @@ ON CONFLICT DO NOTHING;
 INSERT INTO users (name, email, password, role)
 VALUES ('Administrador', 'admin@cafeteria.com', '$2b$10$UJvNbMBrcaTumvwiJw6Xp.LXXI3I2yRlqbKNqEdI2XHWtREYppEmi', 'admin')
 ON CONFLICT (email) DO NOTHING;
+
+-- Tabla de Reservas
+CREATE TABLE IF NOT EXISTS reservations (
+    id SERIAL PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    phone VARCHAR(50),
+    date VARCHAR(20) NOT NULL,
+    time VARCHAR(10) NOT NULL,
+    guests INTEGER NOT NULL DEFAULT 2,
+    status VARCHAR(20) NOT NULL DEFAULT 'pendiente',
+    notes TEXT
+);
+
+-- Datos iniciales de reservas
+INSERT INTO reservations (customer_name, phone, date, time, guests, status, notes)
+VALUES
+('María López', '612345678', '2026-05-05', '13:00', 4, 'pendiente', 'Mesa junto a la ventana'),
+('Carlos Ruiz', '698765432', '2026-05-05', '14:30', 2, 'confirmada', ''),
+('Ana Martínez', '611223344', '2026-05-06', '20:00', 6, 'pendiente', 'Cumpleaños, traer tarta'),
+('Pedro Sánchez', '655667788', '2026-05-04', '12:00', 3, 'cancelada', 'Cancelado por el cliente')
+ON CONFLICT DO NOTHING;

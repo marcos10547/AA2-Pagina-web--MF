@@ -25,9 +25,10 @@ function toggleTheme() {
 }
 
 const adminItems = [
-  { titleKey: 'admin.dashboard', icon: 'mdi-view-dashboard-outline', to: '/admin' },
+  { titleKey: 'admin.dashboard', icon: 'mdi-view-dashboard-outline', to: '/admin', exact: true },
   { titleKey: 'admin.products', icon: 'mdi-package-variant-closed', to: '/admin/products' },
   { titleKey: 'admin.vendors', icon: 'mdi-truck-delivery-outline', to: '/admin/vendors' },
+  { titleKey: 'admin.reservations', icon: 'mdi-calendar-clock', to: '/admin/reservations' },
 ]
 
 function handleLogout() {
@@ -58,6 +59,7 @@ function handleLogout() {
           :prepend-icon="item.icon"
           :title="$t(item.titleKey)"
           :to="item.to"
+          :exact="item.exact"
           rounded="lg"
           class="mb-1"
           active-color="secondary"
